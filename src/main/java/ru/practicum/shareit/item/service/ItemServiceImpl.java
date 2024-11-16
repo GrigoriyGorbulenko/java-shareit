@@ -66,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto updateItem(Long userId, Long itemId, ItemDto itemDto) {
         Long ownerId = checkItem(itemId).getOwnerId();
-        if (userId != ownerId) {
+        if (!userId.equals(ownerId)) {
             throw new NotFoundException("У пользователя нет вещи с id " + itemId);
         }
         return itemMapper.toItemDto(itemStorage.updateItem(itemId, itemDto));

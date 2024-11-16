@@ -12,7 +12,7 @@ import java.util.*;
 public class ItemStorageImpl implements ItemStorage {
 
     private final Map<Long, Item> itemStorage = new HashMap<>();
-    private static long idGenerator = 1;
+    private long idGenerator = 1;
 
     @Override
     public Item createItem(Item item) {
