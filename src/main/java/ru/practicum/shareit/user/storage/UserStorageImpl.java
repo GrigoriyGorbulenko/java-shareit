@@ -23,6 +23,9 @@ public class UserStorageImpl implements UserStorage{
 
     @Override
     public Optional<User> getUserById(Long userId) {
+        if (!userStorage.containsKey(userId)) {
+            return Optional.empty();
+        }
         return Optional.of(userStorage.get(userId));
     }
 
@@ -40,9 +43,9 @@ public class UserStorageImpl implements UserStorage{
 
     @Override
     public User updateUser(Long userId, User newUser) {
-        User oldUser = userStorage.get(userId);
-        oldUser.setName(newUser.getName());
-        oldUser.setEmail(newUser.getEmail());
-        return oldUser;
+        User user = userStorage.get(userId);
+        user.setName(newUser.getName());
+        user.setEmail(newUser.getEmail());
+        return user;
     }
 }
