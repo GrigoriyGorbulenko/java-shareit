@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class UserStorageImpl implements UserStorage{
+public class UserStorageImpl implements UserStorage {
 
     private final Map<Long, User> userStorage = new HashMap<>();
     private long idGenerator = 1;

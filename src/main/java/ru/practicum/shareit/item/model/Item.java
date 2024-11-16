@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.request.model.ItemRequest;
+
 
 /**
  * TODO Sprint add-controllers.
@@ -25,7 +25,6 @@ public class Item {
     @NotBlank
     @NotNull
     String description;
-
     @NotNull
     Boolean available;
     Long ownerId;
