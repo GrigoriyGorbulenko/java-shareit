@@ -1,28 +1,22 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.user.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@AllArgsConstructor
 @NoArgsConstructor
-public class Item {
+@AllArgsConstructor
+public class UserDto {
     Long id;
     @NotBlank
-    @NotNull
     String name;
+    @Email
     @NotBlank
-    @NotNull
-    String description;
-    @NotNull
-    Boolean available;
-    Long ownerId;
-    Long request;
+    String email;
 }
