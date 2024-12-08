@@ -9,7 +9,7 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemStorage itemStorage;
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
     private final ItemMapper itemMapper;
 
     @Override
@@ -65,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto updateItem(Long userId, Long itemId, ItemDto itemDto) {
-        Long ownerId = checkItem(itemId).getOwnerId();
+        Long ownerId = checkItem(itemId).getOwner().getId();
         if (!userId.equals(ownerId)) {
             throw new NotFoundException("У пользователя нет вещи с id " + itemId);
         }
@@ -73,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private User checkUser(Long userId) {
-        return userStorage.getUserById(userId)
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
     }
 

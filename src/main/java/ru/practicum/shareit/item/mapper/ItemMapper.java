@@ -11,16 +11,15 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                item.getOwnerId(),
-                item.getRequest() != null ? item.getRequest() : null);
+                item.getOwner().getId(),
+                item.getRequest() != null ? item.getRequest().getId() : null);
     }
 
     public Item toItem(ItemDto itemDto) {
-        return new Item(itemDto.getId(),
-                itemDto.getName(),
-                itemDto.getDescription(),
-                itemDto.getAvailable(),
-                itemDto.getOwnerId(),
-                itemDto.getRequest() != null ? itemDto.getRequest() : null);
+        Item item = new Item();
+        item.setName(itemDto.getName());
+        item.setDescription(itemDto.getDescription());
+        item.setAvailable(itemDto.getAvailable());
+        return item;
     }
 }
