@@ -1,13 +1,14 @@
 package ru.practicum.shareit.item.service;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.storage.ItemStorage;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -16,19 +17,22 @@ import java.util.List;
 
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
+@Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
 
-    private final ItemStorage itemStorage;
+    private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final ItemMapper itemMapper;
 
     @Override
+    @Transactional
     public ItemDto createItem(Long userId, ItemDto itemDto) {
 
         User user = checkUser(userId);
-        itemDto.setOwnerId(user.getId());
-        return itemMapper.toItemDto(itemStorage.createItem(itemMapper.toItem(itemDto)));
+        Item item = itemMapper.toItem(itemDto);
+        itemDto.setOwnerId(userId);
+        return itemMapper.toItemDto(itemRepository.save(itemMapper.toItem(itemDto)));
 
     }
 
@@ -40,7 +44,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAllItemsByUserId(Long userId) {
         checkUser(userId);
-        return itemStorage.getAllItemsByUserId(userId)
+        return itemRepository.findAllByOwnerIdOrderById(userId)
                 .stream()
                 .map(itemMapper::toItemDto)
                 .toList();
@@ -51,25 +55,30 @@ public class ItemServiceImpl implements ItemService {
         if (text.isEmpty()) {
             return List.of();
         }
-        List<Item> itemSearch = itemStorage.getSearch(text)
-                .stream()
-                .filter(item -> item.getName() != null && item.getDescription() != null)
-                .filter(item ->
-                        (item.getName().toUpperCase().contains(text.toUpperCase()) || item.getDescription().toUpperCase()
-                                .contains(text.toUpperCase())) && item.getAvailable()).toList();
-        return itemSearch
+        return itemRepository.search(text)
                 .stream()
                 .map(itemMapper::toItemDto)
                 .toList();
     }
 
     @Override
+    @Transactional
     public ItemDto updateItem(Long userId, Long itemId, ItemDto itemDto) {
-        Long ownerId = checkItem(itemId).getOwner().getId();
-        if (!userId.equals(ownerId)) {
+        Item item = checkItem(itemId);
+
+        if (!userId.equals(item.getOwner().getId())) {
             throw new NotFoundException("У пользователя нет вещи с id " + itemId);
         }
-        return itemMapper.toItemDto(itemStorage.updateItem(itemId, itemDto));
+        if (itemDto.getName() != null && !itemDto.getName().isBlank()) {
+            item.setName(itemDto.getName());
+        }
+        if (itemDto.getDescription() != null && !itemDto.getDescription().isBlank()) {
+            item.setDescription(itemDto.getDescription());
+        }
+        if (itemDto.getAvailable() != null) {
+            item.setAvailable(itemDto.getAvailable());
+        }
+        return itemMapper.toItemDto(item);
     }
 
     private User checkUser(Long userId) {
@@ -78,7 +87,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private Item checkItem(Long itemId) {
-        return itemStorage.getItemById(itemId)
+        return itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Веещь с id = " + itemId + " не найдена"));
     }
 }

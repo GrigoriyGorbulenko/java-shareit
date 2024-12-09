@@ -10,7 +10,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 public class BookingController {
-    private final BookingService bookingService;
+    //private final BookingService bookingService;
 
     static final String header = "X-Sharer-User-Id";
 }
