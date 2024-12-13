@@ -22,21 +22,20 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
 
     @Override
     public Collection<UserDto> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(userMapper::toUserDto)
+                .map(UserMapper::toUserDto)
                 .toList();
     }
 
     @Override
     public UserDto getUserById(Long userId) {
         User user = checkUser(userId);
-        return userMapper.toUserDto(user);
+        return UserMapper.toUserDto(user);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         List<User> users = new ArrayList<>(userRepository.findAll());
         checkUserEmail(users, userDto);
-        return userMapper.toUserDto(userRepository.save(userMapper.toUser(userDto)));
+        return UserMapper.toUserDto(userRepository.save(UserMapper.toUser(userDto)));
     }
 
     @Override
@@ -67,7 +66,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userDto.getEmail());
         }
 
-        return userMapper.toUserDto(user);
+        return UserMapper.toUserDto(user);
     }
 
     private void checkUserEmail(List<User> users, UserDto userDto) {

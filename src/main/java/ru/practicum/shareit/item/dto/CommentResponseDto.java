@@ -1,11 +1,10 @@
-package ru.practicum.shareit.booking.dto;
+package ru.practicum.shareit.item.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.booking.Status;
 
 import java.time.LocalDateTime;
 
@@ -13,11 +12,9 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingDto {
+public class CommentResponseDto {
     Long id;
-    LocalDateTime start;
-    LocalDateTime end;
-    Long itemId;
-    Long booker;
-    Status status;
+    String text;
+    String authorName;
+    LocalDateTime created;
 }
