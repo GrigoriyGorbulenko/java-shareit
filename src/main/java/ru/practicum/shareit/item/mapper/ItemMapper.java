@@ -12,10 +12,7 @@ public class ItemMapper {
                 item.getDescription(),
                 item.getAvailable(),
                 item.getOwner().getId(),
-                item.getRequest() != null ? item.getRequest().getId() : null,
-                null,
-                null,
-                null);
+                item.getRequest() != null ? item.getRequest().getId() : null);
     }
 
     public static Item toItem(ItemDto itemDto) {
