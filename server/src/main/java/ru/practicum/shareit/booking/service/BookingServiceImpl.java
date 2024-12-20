@@ -71,10 +71,9 @@ public class BookingServiceImpl implements BookingService {
         checkUser(userId);
         checkBooking(bookingId);
         Booking booking = bookingRepository.findById(bookingId).filter(booking1 ->
-                booking1.getBooker().getId() == userId
-                        || booking1.getItem().getOwner().getId() == userId).orElseThrow(() ->
+                booking1.getBooker().getId().equals(userId)
+                        || booking1.getItem().getOwner().getId().equals(userId)).orElseThrow(() ->
                 new NotFoundException("Пользователь не является владельцем вещи"));
-        ;
         return BookingMapper.toBookingResponseDto(booking);
     }
 
