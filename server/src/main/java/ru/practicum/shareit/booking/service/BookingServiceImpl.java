@@ -18,6 +18,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -81,7 +82,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingResponseDto> getAllBookingsByBookerId(Long bookerId, String state) {
         checkUser(bookerId);
         LocalDateTime now = LocalDateTime.now();
-        List<Booking> bookings = switch (State.valueOf(state)) {
+        Collection<Booking> bookings = switch (State.valueOf(state)) {
             case ALL -> bookingRepository.findByBooker_Id(bookerId);
             case CURRENT ->
                     bookingRepository.findByBooker_IdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(bookerId, now, now);
@@ -99,7 +100,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingResponseDto> getAllBookingsByOwnerId(Long ownerId, String state) {
         checkUser(ownerId);
         LocalDateTime now = LocalDateTime.now();
-        List<Booking> bookings = switch (State.valueOf(state)) {
+        Collection<Booking> bookings = switch (State.valueOf(state)) {
             case ALL -> bookingRepository.findByItem_Owner_IdOrderByStartDesc(ownerId);
             case CURRENT ->
                     bookingRepository.findByItem_Owner_IdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(ownerId, now, now);
