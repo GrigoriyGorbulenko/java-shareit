@@ -1,9 +1,12 @@
 package ru.practicum.shareit.request.controller;
 
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.request.ItemRequestClient;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.dto.ItemRequestResponseDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
 import java.util.List;
@@ -16,29 +19,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemRequestController {
 
-    private final ItemRequestService itemRequestService;
+    private final ItemRequestClient itemRequestClient;
     static final String HEADER = "X-Sharer-User-Id";
 
     @PostMapping
-    public ItemRequestResponseDto createItemRequest(@RequestHeader(HEADER) Long userId,
-                                                 @RequestBody ItemRequestDto itemRequestDto) {
-        return itemRequestService.createRequest(userId, itemRequestDto);
+    public ResponseEntity<Object> createItemRequest(@RequestHeader(HEADER) Long userId,
+                                                    @RequestBody ItemRequestDto itemRequestDto) {
+        return itemRequestClient.createRequest(userId, itemRequestDto);
     }
 
     @GetMapping
-    public List<ItemRequestResponseDto> getAllItemRequestsByRequesterId(@RequestHeader(HEADER) Long userId) {
-        return itemRequestService.getAllItemRequestsByRequesterId(userId);
+    public ResponseEntity<Object> getAllItemRequestsByRequesterId(@RequestHeader(HEADER) Long userId) {
+        return itemRequestClient.getAllItemRequestsByRequesterId(userId);
     }
 
     @GetMapping("/all")
-    public List<ItemRequestResponseDto> getAllItemRequestsExceptUserId(
-            @RequestHeader(HEADER) Long userId) {
-        return itemRequestService.getAllItemRequestsExceptUserId(userId);
+    public ResponseEntity<Object>  getAllItemRequestsExceptUserId(
+            @RequestHeader(HEADER) Long userId,
+            @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return itemRequestClient.getAllItemRequestsExceptUserId(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestResponseDto getItemRequestById(@PathVariable("requestId") Long requestId,
+    public ResponseEntity<Object>  getItemRequestById(@PathVariable("requestId") Long requestId,
                                                  @RequestHeader(HEADER) Long userId) {
-        return itemRequestService.getItemRequestById(requestId, userId);
+        return itemRequestClient.getItemRequestById(requestId, userId);
     }
 }

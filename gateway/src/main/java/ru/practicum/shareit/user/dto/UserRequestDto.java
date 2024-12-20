@@ -1,6 +1,5 @@
-package ru.practicum.shareit.user.model;
+package ru.practicum.shareit.user.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -11,19 +10,12 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "users", schema = "public")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@AllArgsConstructor
+public class UserRequestDto {
     Long id;
-
     @NotBlank
     String name;
-
     @Email
     @NotBlank
     String email;

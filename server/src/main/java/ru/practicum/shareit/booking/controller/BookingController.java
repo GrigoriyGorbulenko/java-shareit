@@ -30,7 +30,7 @@ public class BookingController {
     public BookingResponseDto updateBooking(
             @PathVariable("bookingId") Long bookingId,
             @RequestHeader(HEADER) Long userId,
-            @RequestParam(name = "approved") @NotNull Boolean approved) {
+            @RequestParam(name = "approved") Boolean approved) {
         return bookingService.updateBooking(bookingId, userId, approved);
     }
 
@@ -38,7 +38,7 @@ public class BookingController {
     public BookingResponseDto getBookingByUserId(
             @PathVariable("bookingId") Long bookingId,
             @RequestHeader(HEADER) Long userId) {
-        return bookingService.getBookingByUserId(bookingId, userId);
+        return bookingService.getBookingByUserId(userId, bookingId);
     }
 
     @GetMapping
